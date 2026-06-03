@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const articles = (await getCollection('articles'))
+  .filter((a) => !a.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const tracks = [
+  { id: 'pattern', label: 'Patterns', blurb: 'The trade, shown in code.' },
+  { id: 'essay', label: 'Essays', blurb: 'The doctrine, stated plainly.' },
+] as const;
+---
+
+<Base title="Articles" description="Original writing on clear code.">
+  <header class="page-head">
+    <span class="label">Articles</span>
+    <h1>Clarity, argued in code.</h1>
+    <p class="deck">
+      Each piece states a general principle, then pays it off with a
+      side-by-side: the version that optimizes for the writer, and the one that
+      optimizes for the reader — with the cost named.
+    </p>
+  </header>
+
+  {
+    tracks.map((track) => {
+      const inTrack = articles.filter((a) => a.data.track === track.id);
+      if (inTrack.length === 0) return null;
+      return (
+        <section class="track-group">
+          <div class="track-head">
+            <span class="label">{track.label}</span>
+            <span class="track-blurb">{track.blurb}</span>
+          </div>
+          <ul class="article-list">
+            {inTrack.map((a) => (
+              <li>
+                <a href={`/articles/${a.id}`}>
+                  <h2>{a.data.title}</h2>
+                  <p>{a.data.summary}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })
+  }
+</Base>
+
+<style>
+  .page-head {
+    max-width: var(--measure);
+    margin-bottom: 3rem;
+  }
+  .page-head .label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    margin-bottom: 1.2rem;
+  }
+  .deck {
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .track-group {
+    margin-top: 3.5rem;
+  }
+  .track-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .track-blurb {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+
+  .article-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .article-list li {
+    border-bottom: 1px solid var(--line);
+  }
+  .article-list a {
+    display: block;
+    padding: 1.5rem 0;
+    text-decoration: none;
+  }
+  .article-list h2 {
+    font-size: 1.7rem;
+    margin-bottom: 0.4rem;
+  }
+  .article-list p {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--ink-soft);
+  }
+  .article-list a:hover h2 {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

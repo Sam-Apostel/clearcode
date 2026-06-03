@@ -1,0 +1,72 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'clearcode',
+  description = 'Clean code optimizes for the writer. Clear code optimizes for the reader. There are always more readers.',
+} = Astro.props;
+
+const fullTitle = title === 'clearcode' ? title : `${title} — clearcode`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <div class="shell">
+      <Nav />
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <span class="label">clearcode</span>
+        <span class="footer-links">
+          <a href="https://github.com/Sam-Apostel/clearcode">Open source on GitHub</a>
+        </span>
+      </footer>
+    </div>
+
+    <style>
+      main {
+        padding-block: clamp(2rem, 6vw, 5rem);
+      }
+
+      .site-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 2.5rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .footer-links a {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+      }
+    </style>
+  </body>
+</html>

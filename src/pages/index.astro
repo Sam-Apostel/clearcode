@@ -1,0 +1,244 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BlueprintStack from '../components/BlueprintStack.astro';
+import Aphorism from '../components/Aphorism.astro';
+
+const articles = (await getCollection('articles'))
+  .filter((a) => !a.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const inspiration = [
+  {
+    title: 'The Wrong Abstraction',
+    author: 'Sandi Metz',
+    href: 'https://www.sandimetz.com/blog/2016/1/20/the-wrong-abstraction',
+  },
+  {
+    title: "It's probably time to stop recommending Clean Code",
+    author: 'qntm',
+    href: 'https://qntm.org/clean',
+  },
+  {
+    title: 'Goodbye, Clean Code',
+    author: 'Dan Abramov',
+    href: 'https://overreacted.io/goodbye-clean-code/',
+  },
+];
+---
+
+<Base>
+  <!-- ---- hero ---------------------------------------------------------- -->
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="label">A note on clarity</span>
+      <h1>
+        Clear code optimizes<br />for the <mark>reader</mark>.
+      </h1>
+      <p class="deck">
+        Clean code optimizes for the writer. There are always more readers.
+        Clarity is making intent, seams, and failure modes legible — at the
+        call site and in the types.
+      </p>
+    </div>
+    <div class="hero-art" aria-hidden="false">
+      <BlueprintStack />
+    </div>
+  </section>
+
+  <!-- ---- the distinction ----------------------------------------------- -->
+  <section class="frame distinction">
+    <span class="label">Clean vs. Clear</span>
+    <p>
+      <strong>“Clean”</strong> optimizes for the person writing the code: fewer
+      lines, less duplication, a tidy surface. <strong>“Clear”</strong>
+      optimizes for everyone who reads it afterwards — including the tools that
+      now read it more than people do. When the two pull apart, clearcode
+      chooses legibility under change over a tidy-looking surface.
+    </p>
+  </section>
+
+  <Aphorism>
+    The call site is the only documentation that can&rsquo;t drift.
+  </Aphorism>
+
+  <!-- ---- articles ------------------------------------------------------ -->
+  <section class="articles">
+    <header class="section-head">
+      <span class="label">Articles</span>
+      <a class="see-all" href="/articles">All articles &rarr;</a>
+    </header>
+
+    {
+      articles.length === 0 ? (
+        <p class="empty">The first articles are being written.</p>
+      ) : (
+        <ul class="article-list">
+          {articles.map((a) => (
+            <li>
+              <a href={`/articles/${a.id}`}>
+                <span class="track label">{a.data.track}</span>
+                <h3>{a.data.title}</h3>
+                <p>{a.data.summary}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <!-- ---- inspiration --------------------------------------------------- -->
+  <section id="inspiration" class="inspiration">
+    <span class="label">Where this came from</span>
+    <ul class="insp-list">
+      {
+        inspiration.map((i) => (
+          <li>
+            <a href={i.href} rel="noopener">
+              {i.title}
+            </a>
+            <span class="by">{i.author}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  /* hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+    padding-block: clamp(1rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .hero-copy .label {
+    display: block;
+    margin-bottom: 1.2rem;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 7.5vw, 5rem);
+    margin-bottom: 1.4rem;
+  }
+
+  .deck {
+    max-width: 46ch;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    color: var(--ink-soft);
+  }
+
+  .hero-art {
+    justify-self: center;
+    max-width: 320px;
+    width: 100%;
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .hero-art {
+      grid-row: 1;
+      max-width: 220px;
+      justify-self: start;
+    }
+  }
+
+  /* distinction frame */
+  .distinction {
+    max-width: var(--measure);
+  }
+  .distinction .label {
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+  .distinction p {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+  .distinction strong {
+    font-family: var(--font-display);
+    font-weight: 560;
+  }
+
+  /* section heads */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 3.5rem 0 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .see-all {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .see-all:hover {
+    color: var(--ink);
+  }
+
+  /* article list */
+  .article-list,
+  .insp-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .article-list li {
+    border-bottom: 1px solid var(--line);
+  }
+  .article-list a {
+    display: block;
+    padding: 1.4rem 0;
+    text-decoration: none;
+  }
+  .article-list .track {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .article-list h3 {
+    font-size: 1.55rem;
+    margin-bottom: 0.35rem;
+  }
+  .article-list p {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--ink-soft);
+  }
+  .article-list a:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .empty {
+    color: var(--ink-soft);
+  }
+
+  /* inspiration */
+  .inspiration {
+    margin-top: 4rem;
+  }
+  .inspiration .label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .insp-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.55rem 0;
+  }
+  .insp-list .by {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+</style>

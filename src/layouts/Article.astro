@@ -1,0 +1,72 @@
+---
+import Base from './Base.astro';
+import Aphorism from '../components/Aphorism.astro';
+
+interface Props {
+  title: string;
+  summary: string;
+  track: 'pattern' | 'essay';
+  principle: string;
+  aphorism?: string;
+}
+
+const { title, summary, track, principle, aphorism } = Astro.props;
+---
+
+<Base title={title} description={summary}>
+  <article>
+    <header class="article-head">
+      <a class="back" href="/articles">&larr; Articles</a>
+      <span class="track label">{track}</span>
+      <h1>{title}</h1>
+      <p class="principle">{principle}</p>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {aphorism && <Aphorism set:html={aphorism} />}
+  </article>
+</Base>
+
+<style>
+  article {
+    padding-block: clamp(1rem, 4vw, 2rem);
+  }
+
+  .article-head {
+    max-width: var(--measure);
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .back {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .track {
+    display: block;
+    margin: 1.4rem 0 0.8rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    margin-bottom: 1rem;
+  }
+
+  /* the general principle, stated up front, language-agnostic */
+  .principle {
+    font-family: var(--font-display);
+    font-weight: 420;
+    font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+    line-height: 1.3;
+    color: var(--ink);
+    max-width: 40ch;
+    margin: 0;
+  }
+</style>

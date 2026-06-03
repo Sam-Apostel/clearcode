@@ -1,0 +1,96 @@
+---
+// The house format, as a single authoring primitive.
+//
+//   <Compare cost="Every new layout needs a new prop.">
+//     <Fragment slot="clean"> ```tsx … ``` </Fragment>
+//     <Fragment slot="clear"> ```tsx … ``` </Fragment>
+//   </Compare>
+//
+// `clean` is the version that optimizes for the writer; `clear` optimizes for
+// the reader. The `cost` line names what the clean version charges you later —
+// that named cost is the whole argument.
+interface Props {
+  cost: string;
+}
+const { cost } = Astro.props;
+---
+
+<div class="compare">
+  <div class="col">
+    <span class="tag tag-clean">Clean</span>
+    <div class="snippet"><slot name="clean" /></div>
+  </div>
+  <div class="col">
+    <span class="tag tag-clear">Clear</span>
+    <div class="snippet"><slot name="clear" /></div>
+  </div>
+</div>
+<p class="cost"><span class="cost-label">Cost</span>{cost}</p>
+
+<style>
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    margin: 1.5rem 0 0;
+    border: 1px solid var(--line);
+    background-color: var(--line);
+  }
+
+  .col {
+    background-color: var(--paper);
+    padding: 0.9rem 1rem 1.1rem;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag-clear {
+    background-color: var(--accent);
+    border-color: transparent;
+  }
+
+  /* let the code blocks sit flush inside the columns */
+  .snippet :global(pre) {
+    margin: 0;
+    border: none;
+    padding: 0;
+    background-color: transparent !important;
+  }
+
+  .cost {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0 0 1.5rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--line);
+    border-top: none;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+
+  .cost-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 680px) {
+    .compare {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

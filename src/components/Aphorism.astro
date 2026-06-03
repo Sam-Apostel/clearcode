@@ -1,0 +1,23 @@
+---
+// A pull-quote used to anchor sections. The bank of these lives across the
+// site; each one states a piece of the doctrine in a single line.
+---
+
+<blockquote class="aphorism">
+  <slot />
+</blockquote>
+
+<style>
+  .aphorism {
+    font-family: var(--font-display);
+    font-weight: 420;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    margin: 2.5rem 0;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--accent);
+    color: var(--ink);
+    max-width: 30ch;
+  }
+</style>

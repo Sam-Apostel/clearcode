@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#f3efe4" />
+  <!-- crop-mark register, the site's motif -->
+  <g fill="none" stroke="#16140f" stroke-width="2">
+    <path d="M5 5 h6 M5 5 v6" />
+    <path d="M27 27 h-6 M27 27 v-6" />
+  </g>
+  <rect x="11" y="11" width="10" height="10" fill="#76e0d2" />
+</svg>
