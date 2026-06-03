@@ -1,0 +1,44 @@
+---
+// An exploded isometric stack, drawn in hairline. It reads as layers that
+// compose into a whole — the blueprint motif standing in for the thesis:
+// structure made visible.
+---
+
+<svg
+  class="blueprint"
+  viewBox="0 0 320 360"
+  fill="none"
+  role="img"
+  aria-label="An exploded stack of composed layers, drawn as a blueprint."
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g stroke="currentColor" stroke-width="1.25" stroke-linejoin="round">
+    <!-- top layer -->
+    <g>
+      <path d="M160 30 L250 72 L160 114 L70 72 Z" />
+      <path d="M160 114 L160 134" stroke-dasharray="3 5" />
+    </g>
+    <!-- middle layer with a node graph on its face -->
+    <g>
+      <path d="M160 134 L250 176 L160 218 L70 176 Z" />
+      <circle cx="160" cy="170" r="5" fill="currentColor" stroke="none" />
+      <circle cx="130" cy="186" r="5" fill="currentColor" stroke="none" />
+      <circle cx="190" cy="186" r="5" fill="currentColor" stroke="none" />
+      <path d="M160 170 L130 186 M160 170 L190 186 M130 186 L190 186" />
+      <path d="M160 218 L160 238" stroke-dasharray="3 5" />
+    </g>
+    <!-- base layer with an X register mark -->
+    <g>
+      <path d="M160 238 L250 280 L160 322 L70 280 Z" />
+      <path d="M140 280 L180 280 M160 270 L160 290" />
+    </g>
+  </g>
+</svg>
+
+<style>
+  .blueprint {
+    width: 100%;
+    height: auto;
+    color: var(--line-strong);
+  }
+</style>

@@ -1,0 +1,222 @@
+/* ----------------------------------------------------------------------------
+   clearcode — design tokens & base styles
+
+   The look is a technical document on paper: a serif display face, a mono for
+   labels and code, a faint blueprint grid, and hairline crop marks. One accent
+   colour, used sparingly. The aesthetic argues the thesis before a word is
+   read — structure made legible.
+---------------------------------------------------------------------------- */
+
+:root {
+  /* paper & ink */
+  --paper: #f3efe4;
+  --paper-panel: #ece6d6;
+  --paper-code: #efeadd;
+  --ink: #16140f;
+  --ink-soft: #4e4a3f;
+  --ink-faint: #8a8576;
+
+  /* hairlines */
+  --line: rgba(22, 20, 15, 0.16);
+  --line-strong: rgba(22, 20, 15, 0.32);
+
+  /* single accent */
+  --accent: #76e0d2;
+
+  /* type */
+  --font-display: 'Fraunces Variable', Fraunces, Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  /* rhythm */
+  --measure: 64ch;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  /* faint blueprint grid */
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- typography ---------------------------------------------------------- */
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  margin: 0;
+  font-optical-sizing: auto;
+}
+
+p {
+  margin: 0 0 1.1em;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-color: var(--ink);
+}
+
+/* highlighter accent — the one bit of colour, used on a few words */
+mark,
+.mark {
+  background-color: var(--accent);
+  color: var(--ink);
+  padding: 0.02em 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* small mono label, e.g. section eyebrows and nav chips */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---- layout -------------------------------------------------------------- */
+
+.shell {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose p,
+.prose li {
+  color: var(--ink-soft);
+}
+
+.prose h2 {
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  margin: 2.4em 0 0.6em;
+  color: var(--ink);
+}
+
+.prose h3 {
+  font-size: 1.3rem;
+  margin: 1.8em 0 0.5em;
+  color: var(--ink);
+}
+
+/* ---- crop-marked frame --------------------------------------------------- */
+/* A bordered panel with hairline crop ticks at the corners — the blueprint
+   register marks from the reference. */
+
+.frame {
+  position: relative;
+  border: 1px solid var(--line);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background-color: color-mix(in srgb, var(--paper-panel) 60%, transparent);
+}
+
+.frame::before,
+.frame::after,
+.frame > .crop-tl,
+.frame > .crop-br {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--ink);
+  border-style: solid;
+  border-width: 0;
+}
+
+/* top-left + bottom-right corner ticks via pseudo-elements */
+.frame::before {
+  top: -1px;
+  left: -1px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+/* ---- inline code & pre --------------------------------------------------- */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+}
+
+:not(pre) > code {
+  background-color: var(--paper-panel);
+  padding: 0.1em 0.34em;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+pre.astro-code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  /* Shiki sets its own bg; nudge it toward paper */
+  background-color: var(--paper-code) !important;
+}
+
+pre.astro-code code {
+  font-size: inherit;
+}
+
+/* ---- utilities ----------------------------------------------------------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 3rem 0;
+}

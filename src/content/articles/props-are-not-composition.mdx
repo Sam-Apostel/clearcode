@@ -1,0 +1,86 @@
+---
+title: Props are not composition
+track: pattern
+order: 1
+principle: Configuration hides intent. Composition reveals it.
+summary: >-
+  A component with a prop for every option is technically DRY and quietly
+  unreadable. Composition makes the call site read like the thing it renders.
+aphorism: Prefer code you can delete to code you can configure.
+---
+
+import Compare from '../../components/Compare.astro';
+
+There is a moment in the life of every shared component where someone needs it
+to do one more thing. A badge, here. A collapsed-by-default state, there. The
+fastest change — the _clean_ change, even — is to add a prop. Nothing is
+duplicated; there is still exactly one component. The surface stays tidy.
+
+Do this enough times and you arrive at a component with fourteen props, four of
+which only make sense in combination, and a call site that tells you nothing
+about what will actually render. It is DRY. It is also opaque.
+
+## The trade
+
+<Compare cost="Every new layout needs another prop. The component grows a configuration language nobody documented, and the call site stops describing what you'll see.">
+  <Fragment slot="clean">
+  ```tsx
+  // One component. Every option a prop.
+  <Card
+    title="Invoice"
+    subtitle="#1024"
+    badge="overdue"
+    badgeTone="danger"
+    collapsible
+    defaultCollapsed
+    footerActions={[saveBtn, cancelBtn]}
+  />
+  ```
+  </Fragment>
+  <Fragment slot="clear">
+  ```tsx
+  // The markup mirrors the rendered structure.
+  <Card>
+    <Card.Header badge={<Badge tone="danger">overdue</Badge>}>
+      <Card.Title>Invoice</Card.Title>
+      <Card.Subtitle>#1024</Card.Subtitle>
+    </Card.Header>
+    <Card.Collapse defaultOpen={false}>{/* … */}</Card.Collapse>
+    <Card.Footer>
+      {saveBtn}
+      {cancelBtn}
+    </Card.Footer>
+  </Card>
+  ```
+  </Fragment>
+</Compare>
+
+The first version answers the question “how do I configure a Card?” The second
+answers the question you actually have: “what does this Card _contain_?” Only
+one of those questions has a stable answer as requirements change.
+
+## Why the props version loses
+
+A prop is a promise that the component will interpret a value correctly. Every
+new prop multiplies the states the component must reconcile — `collapsible`
+without `defaultCollapsed`, `badge` without `badgeTone`, the combinations no one
+tested. The component becomes a small, undocumented interpreter, and its props
+are its bytecode.
+
+Composition moves that branching back out to the call site, where it is
+visible. `Card.Header` is not a flag the component has to interpret; it is a
+thing you can see in the tree. The structure of the JSX _is_ the structure of
+the output. Nothing has to stay in sync because nothing was ever separated.
+
+## When a prop is the right answer
+
+This is not a rule against props — it is a rule against props that encode
+_structure_. A prop is exactly right for a value: `id`, `onSubmit`, `aria-label`,
+`href`. Reach for composition the moment a prop starts deciding _what renders
+where_. That is the line. `tone="danger"` is a value. `footerActions={[…]}` is
+structure wearing a value's clothes.
+
+The principle is not React's, and not TypeScript's. Any language that lets you
+pass behaviour as data eventually offers you this same choice: encode the shape
+as configuration the reader has to decode, or expose the shape directly and let
+them read it. Clear code exposes the shape.
